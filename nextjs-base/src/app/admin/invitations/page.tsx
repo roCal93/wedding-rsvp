@@ -1,5 +1,8 @@
 import CopyUrlInput from './CopyUrlInput'
 
+// Force dynamic rendering – never statically pre-render this admin page.
+export const dynamic = 'force-dynamic'
+
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || ''
 const ADMIN_SECRET = process.env.ADMIN_SECRET || 'admin-secret-change-me'
