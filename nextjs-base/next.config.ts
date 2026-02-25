@@ -68,7 +68,9 @@ const nextConfig: NextConfig = {
   // module resolution issues when the repo contains multiple lockfiles.
   // See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory
   turbopack: {
-    root: __dirname,
+    // `__dirname` is not available when this config is evaluated as ESM on Vercel.
+    // `process.cwd()` points to the project root (Root Directory) during builds.
+    root: process.cwd(),
   } as const,
 
   // Autoriser l'admin Strapi à intégrer le site en iframe pour la Preview
