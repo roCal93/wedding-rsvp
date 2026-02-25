@@ -47,6 +47,11 @@ const nextConfig: NextConfig = {
       //   hostname: 'wedding-rsvp-strapi-production.up.railway.app',
       //   pathname: '/uploads/**',
       // },
+      {
+        protocol: 'https',
+        hostname: 'wedding-rsvp-production-3bc2.up.railway.app',
+        pathname: '/uploads/**',
+      },
     ],
     unoptimized: process.env.NODE_ENV === 'development', // Activer l'optimisation en production
     formats: ['image/webp', 'image/avif'], // Formats modernes pour réduire la taille
