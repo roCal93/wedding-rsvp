@@ -201,11 +201,6 @@ export default async function Page({
     notFound()
   }
 
-  // Redirige /[locale]/home vers /[locale]
-  if (slug === 'home') {
-    redirect(`/${locale}`)
-  }
-
   const sparams = searchParams ? await Promise.resolve(searchParams) : undefined
   const { isEnabled } = await draftMode()
   // Draft Mode is the source of truth, searchParams is fallback
