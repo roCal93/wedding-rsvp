@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js
+nextjs-base/.next/
+nextjs-base/out/
+
+# Strapi
+strapi-base/.tmp/
+strapi-base/.cache/
+strapi-base/build/
+strapi-base/public/uploads/*
+!strapi-base/public/uploads/.gitkeep
+
+# Env files — never commit secrets
+.env
+.env.local
+.env.*.local
+nextjs-base/.env.local
+strapi-base/.env
+strapi-base/.env.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Build artifacts
+coverage/
+dist/

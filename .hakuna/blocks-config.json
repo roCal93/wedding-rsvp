@@ -1,0 +1,10 @@
+{
+  "selectedBlocks": [
+    "TextBlock",
+    "ImageBlock",
+    "ButtonBlock"
+  ],
+  "preset": "minimal",
+  "autoSync": true,
+  "lastSync": "2026-02-23T06:46:33.269Z"
+}
