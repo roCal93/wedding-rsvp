@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { locales, defaultLocale } from './src/lib/locales'
+
+const DEFAULT_LOCALE = 'fr'
 
 export function middleware(req: NextRequest) {
   try {
@@ -16,59 +17,14 @@ export function middleware(req: NextRequest) {
       return NextResponse.next()
     }
 
-    const segments = pathname.split('/').filter(Boolean)
-    const first = segments[0]
-    const locale =
-      first && (locales as readonly string[]).includes(first)
-        ? first
-        : defaultLocale
-
-    // Only redirect when there is NO locale segment at all ("/").
-    // If the first segment exists but is not a supported locale (e.g. "/f"),
-    // we let the request through so the app can render a proper 404.
-    if (!first) {
+    // Keep middleware minimal to avoid Edge runtime crashes.
+    if (pathname === '/') {
       const url = req.nextUrl.clone()
-      url.pathname = `/${locale}${url.pathname}`
-
-      const redirectRes = NextResponse.redirect(url)
-      // In Vercel Edge, prefer NextResponse cookies API; avoid manual `set-cookie`
-      // header manipulation as it can trigger runtime failures.
-      try {
-        redirectRes.cookies.set('locale', locale, {
-          path: '/',
-          sameSite: 'lax',
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 60 * 60 * 24 * 30,
-        })
-      } catch {
-        // If cookies API is unavailable for some reason, just skip setting it.
-      }
-
-      return redirectRes
+      url.pathname = `/${DEFAULT_LOCALE}`
+      return NextResponse.redirect(url)
     }
 
-    // If the first segment exists but is not a supported locale, do not rewrite/redirect.
-    if (!(locales as readonly string[]).includes(first)) {
-      return NextResponse.next()
-    }
-
-    const res = NextResponse.next()
-
-    // Same rationale as above: avoid manual `set-cookie` header in Edge.
-    try {
-      res.cookies.set('locale', locale, {
-        path: '/',
-        sameSite: 'lax',
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 24 * 30,
-      })
-    } catch {
-      // noop
-    }
-
-    return res
+    return NextResponse.next()
   } catch {
     return NextResponse.next()
   }
@@ -78,5 +34,5 @@ export function middleware(req: NextRequest) {
 // we also avoid running the middleware for favicon requests which otherwise
 // trigger mysterious `MIDDLEWARE_INVOCATION_FAILED` errors in production.
 export const config = {
-  matcher: ['/((?!_next|api|static|admin|favicon\\.ico).*)'],
+  matcher: ['/:path*'],
 }
