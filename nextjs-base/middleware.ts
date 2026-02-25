@@ -81,7 +81,9 @@ export function middleware(req: NextRequest) {
   }
 }
 
-// Match all non-api and non-_next routes
+// Match all non-api, non-_next, non-static, non-admin routes
+// we also avoid running the middleware for favicon requests which otherwise
+// trigger mysterious `MIDDLEWARE_INVOCATION_FAILED` errors in production.
 export const config = {
-  matcher: ['/((?!_next|api|static).*)'],
+  matcher: ['/((?!_next|api|static|admin|favicon\\.ico).*)'],
 }
