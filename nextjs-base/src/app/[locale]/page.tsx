@@ -1,5 +1,10 @@
-import { notFound } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
-export default function LocalePage() {
-  notFound()
+export default async function LocalePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  redirect(`/${locale}/home`)
 }
