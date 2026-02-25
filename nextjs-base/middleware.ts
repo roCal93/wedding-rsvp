@@ -31,10 +31,10 @@ export function middleware(req: NextRequest) {
       url.pathname = `/${locale}${url.pathname}`
 
       const redirectRes = NextResponse.redirect(url)
+      // In Vercel Edge, prefer NextResponse cookies API; avoid manual `set-cookie`
+      // header manipulation as it can trigger runtime failures.
       try {
-        redirectRes.cookies.set({
-          name: 'locale',
-          value: locale,
+        redirectRes.cookies.set('locale', locale, {
           path: '/',
           sameSite: 'lax',
           httpOnly: true,
@@ -42,8 +42,7 @@ export function middleware(req: NextRequest) {
           maxAge: 60 * 60 * 24 * 30,
         })
       } catch {
-        const cookieValue = `locale=${encodeURIComponent(locale)}; Path=/; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}${process.env.NODE_ENV === 'production' ? '; Secure; HttpOnly' : ''}`
-        redirectRes.headers.set('set-cookie', cookieValue)
+        // If cookies API is unavailable for some reason, just skip setting it.
       }
 
       return redirectRes
@@ -56,11 +55,9 @@ export function middleware(req: NextRequest) {
 
     const res = NextResponse.next()
 
+    // Same rationale as above: avoid manual `set-cookie` header in Edge.
     try {
-      // Prefer the Cookies API when available (sets HttpOnly cookie)
-      res.cookies.set({
-        name: 'locale',
-        value: locale,
+      res.cookies.set('locale', locale, {
         path: '/',
         sameSite: 'lax',
         httpOnly: true,
@@ -68,9 +65,7 @@ export function middleware(req: NextRequest) {
         maxAge: 60 * 60 * 24 * 30,
       })
     } catch {
-      // Fallback to setting header
-      const cookieValue = `locale=${encodeURIComponent(locale)}; Path=/; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}${process.env.NODE_ENV === 'production' ? '; Secure; HttpOnly' : ''}`
-      res.headers.set('set-cookie', cookieValue)
+      // noop
     }
 
     return res
