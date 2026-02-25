@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { locales, defaultLocale } from './src/lib/locales'
 
-export const runtime = 'edge'
-
 export function middleware(req: NextRequest) {
   try {
     const { pathname } = req.nextUrl
