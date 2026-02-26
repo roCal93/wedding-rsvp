@@ -13,7 +13,7 @@
 
 1. Allez sur [railway.app](https://railway.app)
 2. **New Project** → **Deploy from GitHub repo**
-3. Sélectionnez votre repository `hakuna-mataweb-base-strapi`
+3. Sélectionnez votre repository contenant `projects/clients/wedding-rsvp/strapi-base`
 
 ### 2. Ajouter PostgreSQL
 
@@ -46,14 +46,14 @@ ALLOWED_ORIGINS=https://amandatraduction.com,https://www.amandatraduction.com,ht
 # - Après modification, redémarrez / redeployez votre service Strapi pour appliquer la nouvelle valeur.
 
 # Test CORS depuis votre machine (vérifier la présence de Access-Control-Allow-Origin)
-# Remplacez <ORIGIN> par l'origin à tester (ex: https://www.amandatraduction.com)
-# Exemple :
-# curl -i -H "Origin: https://www.amandatraduction.com" -G "https://traduction-amanda-production.up.railway.app/api/work-items" --data-urlencode "pagination[limit]=1"
-# La réponse doit contenir "Access-Control-Allow-Origin: https://www.amandatraduction.com"
+# Remplacez <ORIGIN> par l'origin à tester.
+# Exemple (endpoint à adapter selon vos permissions publiques) :
+# curl -i -H "Origin: https://votre-front.com" "https://votre-projet.up.railway.app/api/weddings"
+# La réponse doit contenir "Access-Control-Allow-Origin: https://votre-front.com"
 
 # Script helper
 # Vous pouvez aussi utiliser le script fourni pour tester :
-# ./scripts/check-cors.sh "https://www.amandatraduction.com" "https://traduction-amanda-production.up.railway.app/api/work-items?pagination[limit]=1"
+# ./scripts/check-cors.sh "https://votre-front.com" "https://votre-projet.up.railway.app/api/weddings"
 ```
 
 Astuce (si erreur SWC lors du build) :

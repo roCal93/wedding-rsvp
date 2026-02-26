@@ -21,22 +21,6 @@ export async function POST(request: NextRequest) {
 
     // Revalider les chemins principaux au cas où
     revalidatePath('/', 'layout')
-    revalidatePath('/[locale]', 'layout')
-
-    // Revalider les pages spécifiques si elles sont mentionnées dans le webhook
-    if (body.model === 'page') {
-      const slug = body.entry?.slug
-      const locale = body.entry?.locale || 'fr'
-
-      if (slug) {
-        // Revalider la page spécifique
-        revalidatePath(`/${locale}/${slug}`)
-        // Revalider la page d'accueil si c'est la home
-        if (slug === 'home') {
-          revalidatePath(`/${locale}`)
-        }
-      }
-    }
 
     // Revalidation successfully triggered
 

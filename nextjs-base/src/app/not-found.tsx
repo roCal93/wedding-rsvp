@@ -1,47 +1,9 @@
-"use client"
-
-import { useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-
-import { defaultLocale, locales } from '@/lib/locales'
 
 export default function RootNotFound() {
-  const router = useRouter()
-  const pathname = usePathname()
-
-  useEffect(() => {
-    // Check if the first segment looks like an invalid locale
-    const segments = pathname?.split('/').filter(Boolean) || []
-    const firstSegment = segments[0]
-
-    // If first segment exists but is not a valid locale, redirect to default locale
-    if (
-      firstSegment &&
-      !(locales as readonly string[]).includes(firstSegment)
-    ) {
-      const remainingPath = segments.slice(1).join('/')
-      const newPath = remainingPath
-        ? `/${defaultLocale}/${remainingPath}`
-        : `/${defaultLocale}`
-      router.replace(newPath)
-    }
-  }, [pathname, router])
-
-  const content = {
-    fr: {
-      title: '404',
-      message: "Cette page n'existe pas.",
-      button: "Retour à l'accueil",
-    },
-    en: {
-      title: '404',
-      message: "This page doesn't exist.",
-      button: 'Back to home',
-    },
-  }
-
-  const text = content[defaultLocale as 'fr' | 'en']
+  const title = '404'
+  const message = "Cette page n'existe pas."
+  const button = "Retour à l'accueil"
 
   return (
     <main
@@ -60,13 +22,13 @@ export default function RootNotFound() {
         id="notfound-title"
         style={{ fontSize: '3rem', marginBottom: '1rem' }}
       >
-        {text.title}
+        {title}
       </h1>
 
-      <p style={{ marginBottom: '1.5rem', color: '#374151' }}>{text.message}</p>
+      <p style={{ marginBottom: '1.5rem', color: '#374151' }}>{message}</p>
 
       <Link
-        href={`/${defaultLocale}`}
+        href="/"
         style={{
           padding: '0.75rem 1.5rem',
           backgroundColor: '#2563eb',
@@ -76,7 +38,7 @@ export default function RootNotFound() {
           fontWeight: '500',
         }}
       >
-        {text.button}
+        {button}
       </Link>
     </main>
   )

@@ -1,12 +1,7 @@
 import type { Metadata } from 'next'
 import { Cormorant_Garamond, Hurricane } from 'next/font/google'
 import './globals.css'
-import { cookies, headers } from 'next/headers'
-import { defaultLocale } from '@/lib/locales'
 import { isDisableDark } from '@/lib/theme'
-
-// Mark layout dynamic since we read cookies/headers for locale detection
-export const dynamic = 'force-dynamic'
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: '--font-cormorant',
@@ -57,36 +52,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  let locale = defaultLocale
-
-  try {
-    const cookieStore = await cookies()
-    const cookieLocale = cookieStore.get('locale')?.value
-    if (cookieLocale === 'fr' || cookieLocale === 'en') {
-      locale = cookieLocale
-    } else {
-      locale = defaultLocale
-    }
-  } catch {
-    // Fallback: parse header cookie string if cookies() is unavailable
-    try {
-      const cookieHeader = (await headers()).get('cookie') ?? ''
-      const match = cookieHeader.match(/(?:^|; )locale=([^;]+)/)
-      const parsedLocale = match ? decodeURIComponent(match[1]) : defaultLocale
-      locale =
-        parsedLocale === 'fr' || parsedLocale === 'en'
-          ? parsedLocale
-          : defaultLocale
-    } catch {
-      locale = defaultLocale
-    }
-  }
-
   const disableDark = isDisableDark()
 
   return (
     <html
-      lang={locale}
+      lang="fr"
       suppressHydrationWarning
       data-disable-dark={disableDark ? 'true' : undefined}
       className={`${cormorantGaramond.variable} ${hurricane.variable}`}

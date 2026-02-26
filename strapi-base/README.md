@@ -1,6 +1,6 @@
-# Template Strapi – Hakuna Mataweb
+# Strapi Backend – Wedding RSVP
 
-Template backend pour les projets clients.
+Backend Strapi du projet RSVP. Ce backend est volontairement réduit au strict nécessaire : uniquement les content-types `guest` et `wedding`.
 
 ## Stack
 - Strapi 5
@@ -8,16 +8,15 @@ Template backend pour les projets clients.
 - SQLite (local)
 - TypeScript
 
-## Hébergement
-- Railway ou VPS
+## Scope actuel
+- APIs conservées : `src/api/guest`, `src/api/wedding`
+- Composants Strapi : aucun composant métier actif
+- Objectif : gestion invitations + RSVP uniquement
 
 ## Utilisation
 
 ### 1. Initialisation
 ```bash
-# Copier ce template
-cp -r templates/strapi-base projects/clients/mon-projet-backend
-
 # Installer les dépendances
 npm install
 
@@ -116,14 +115,9 @@ Reportez-vous à `HAKUNA_MATAWEB_AGENCE/docs/cloudinary-setup.md` pour la checkl
 ## Bonnes pratiques
 
 ### Content-Types
-- Utilisez des noms en anglais (page, article, product)
-- Activez Draft & Publish pour le contenu éditorial
-- Configurez les permissions API appropriées
-
-### Components
-- Regroupez par catégorie (sections, blocks, ui)
-- Réutilisez au maximum
-- Documentez dans le displayName
+- Garder le modèle simple (`guest` + `wedding`)
+- Configurer finement les permissions publiques (lecture invitation + RSVP)
+- Régénérer les types après chaque modification de schéma
 
 ### Types TypeScript
 - Ne modifiez JAMAIS les fichiers générés
@@ -137,7 +131,7 @@ npm run build            # Build de production
 npm run start            # Démarrer en production
 npm run generate:types   # Générer les types TypeScript
 npm run sync:types       # Synchroniser avec Next.js
-npm run types            # Générer + Synchroniser
+npm run check:cors       # Vérifier la config CORS
 ```
 
 ## Troubleshooting
@@ -154,10 +148,7 @@ cat types/strapi-types.d.ts
 ### Erreurs de synchronisation
 Assurez-vous que le projet Next.js est au bon emplacement :
 ```
-templates/
+projects/clients/wedding-rsvp/
 ├── strapi-base/      # Ici
 └── nextjs-base/      # Là
 ```
-
-⚠️ **Ne jamais modifier ce template directement**  
-Pour un nouveau projet : copiez le dossier complet dans `/projects/clients/`

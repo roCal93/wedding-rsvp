@@ -223,6 +223,27 @@ npm run dev
 # Le site est accessible sur http://localhost:3000
 ```
 
+### Routes principales (wedding-rsvp)
+
+Depuis le passage en **mono-langue**, il n'y a plus de routes `/{locale}/...`.
+
+- `/` → redirige vers `/admin/invitations`
+- `/invitation/[token]` → page RSVP publique pour un invité
+- `/admin/invitations?secret=...` → dashboard admin des invitations
+
+API utilisées :
+
+- `/api/rsvp/[token]` → enregistrement RSVP (PUT)
+- `/api/contact` → envoi formulaire de contact
+- `/api/preview` → activation preview/draft
+- `/api/draft/disable` → sortie du draft mode
+- `/api/revalidate` → invalidation cache ISR
+
+Routes techniques :
+
+- `/robots.txt`
+- `/sitemap.xml`
+
 ### 7. Build et déploiement
 
 ```bash
@@ -268,7 +289,6 @@ strapi.delete<T>(contentType, id)
   sort: ['createdAt:desc'],
   pagination: { page: 1, pageSize: 10 },
   fields: ['title', 'content'],
-  locale: 'fr',
   publicationState: 'live'
 }
 ```
