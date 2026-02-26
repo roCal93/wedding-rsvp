@@ -8,6 +8,20 @@ if (process.env.SKIP_ENSURE_NATIVE_DEPS === '1') {
     process.exit(0);
 }
 
+const userAgent = process.env.npm_config_user_agent || '';
+const isPnpm = userAgent.includes('pnpm/');
+
+function run(command) {
+    execSync(command, {
+        stdio: 'inherit',
+        cwd: process.cwd(),
+        env: {
+            ...process.env,
+            NPM_CONFIG_OPTIONAL: 'true',
+        },
+    });
+}
+
 // First, ensure better-sqlite3 is compiled (required for all platforms)
 console.log('[ensure-native-deps] Checking better-sqlite3 compilation...');
 try {
@@ -20,10 +34,7 @@ try {
 
     if (!bindingExists) {
         console.log('[ensure-native-deps] Compiling better-sqlite3...');
-        execSync('npm rebuild better-sqlite3', {
-            stdio: 'inherit',
-            cwd: process.cwd(),
-        });
+        run(isPnpm ? 'pnpm rebuild better-sqlite3' : 'npm rebuild better-sqlite3');
         console.log('[ensure-native-deps] ✅ better-sqlite3 compiled successfully');
     } else {
         console.log('[ensure-native-deps] ✅ better-sqlite3 already compiled');
@@ -35,6 +46,11 @@ try {
 // This is primarily to protect Linux CI/container builds where the install step
 // can be cached (e.g. Railpack) and optional native deps were previously omitted.
 if (process.platform !== 'linux') {
+    process.exit(0);
+}
+
+if (isPnpm) {
+    console.log('[ensure-native-deps] pnpm detected: skipping npm-based optional native dependency repair.');
     process.exit(0);
 }
 
@@ -105,14 +121,7 @@ if (missing.length === 0) {
 console.log(`[ensure-native-deps] Missing native optional deps on linux/${arch}: ${missing.join(', ')}`);
 console.log('[ensure-native-deps] Running npm install --include=optional to repair...');
 
-execSync('npm install --include=optional --no-audit --no-fund', {
-    stdio: 'inherit',
-    env: {
-        ...process.env,
-        // Ensure optional deps are not omitted.
-        NPM_CONFIG_OPTIONAL: 'true',
-    },
-});
+run('npm install --include=optional --no-audit --no-fund');
 
 const stillMissing = [];
 if (!isModulePresent(rollupPackage) && !isPackageDirPresent(rollupPackage)) stillMissing.push(rollupPackage);
@@ -131,13 +140,7 @@ for (const pkgName of stillMissing) {
     const version = pkgName.startsWith('@rollup/') ? rollupVersion : swcCoreVersion;
     const spec = version ? `${pkgName}@${version}` : pkgName;
     console.log(`[ensure-native-deps] Forcing install: ${spec}`);
-    execSync(`npm install --no-save --no-package-lock --no-audit --no-fund ${spec}`, {
-        stdio: 'inherit',
-        env: {
-            ...process.env,
-            NPM_CONFIG_OPTIONAL: 'true',
-        },
-    });
+    run(`npm install --no-save --no-package-lock --no-audit --no-fund ${spec}`);
 }
 
 const finalMissing = [];
