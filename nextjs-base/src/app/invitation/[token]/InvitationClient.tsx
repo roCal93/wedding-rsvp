@@ -113,16 +113,22 @@ export default function InvitationClient({
       {/* SVG background */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/card-bg-mobile.svg"
+        src="/images/card-bg-mobile.webp"
         alt=""
         aria-hidden="true"
+        fetchPriority="high"
+        loading="eager"
+        decoding="async"
         className="pointer-events-none select-none fixed inset-0 w-full h-full object-cover -z-10 md:hidden"
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/wedding-bg.svg"
+        src="/images/wedding-bg.webp"
         alt=""
         aria-hidden="true"
+        fetchPriority="high"
+        loading="eager"
+        decoding="async"
         className="pointer-events-none select-none fixed inset-0 w-full h-full object-cover -z-10 hidden md:block"
       />
       {/* Header */}
@@ -176,7 +182,7 @@ export default function InvitationClient({
         {/* Card SVG background */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/card-bg.svg"
+          src="/images/card-bg.webp"
           alt=""
           aria-hidden="true"
           className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover z-0 hidden md:block"

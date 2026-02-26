@@ -60,7 +60,26 @@ export default async function InvitationPage({
 
   if (!guest) notFound()
 
-  return <InvitationClient guest={guest} token={token} />
+  return (
+    <>
+      {/* Preload background images for faster LCP */}
+      <link
+        rel="preload"
+        as="image"
+        type="image/webp"
+        href="/images/card-bg-mobile.webp"
+        media="(max-width: 767px)"
+      />
+      <link
+        rel="preload"
+        as="image"
+        type="image/webp"
+        href="/images/wedding-bg.webp"
+        media="(min-width: 768px)"
+      />
+      <InvitationClient guest={guest} token={token} />
+    </>
+  )
 }
 
 export const metadata = {
