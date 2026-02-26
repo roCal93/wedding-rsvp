@@ -44,10 +44,7 @@ export default function AdminLoginPage() {
           Administration
         </h1>
 
-        <label
-          className="block text-sm text-stone-500 mb-1"
-          htmlFor="secret"
-        >
+        <label className="block text-sm text-stone-500 mb-1" htmlFor="secret">
           Secret d&apos;accès
         </label>
         <input
@@ -60,9 +57,7 @@ export default function AdminLoginPage() {
           autoComplete="current-password"
         />
 
-        {error && (
-          <p className="text-red-500 text-xs mb-3">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-xs mb-3">{error}</p>}
 
         <button
           type="submit"

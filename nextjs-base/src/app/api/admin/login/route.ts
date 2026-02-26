@@ -16,7 +16,10 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ error: 'Corps de requête invalide' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Corps de requête invalide' },
+      { status: 400 }
+    )
   }
 
   if (!body.secret || body.secret !== ADMIN_SECRET) {
