@@ -18,11 +18,14 @@ export default ({ env }) => {
     ? {
         // Railway fournit DATABASE_URL avec SSL activé
         connectionString: env('DATABASE_URL'),
-        // rejectUnauthorized defaults to true for secure certificate validation.
-        // Set DATABASE_SSL_REJECT_UNAUTHORIZED=false only if your provider uses
-        // a self-signed cert that cannot be verified (not recommended).
+        // Railway (and some other PaaS providers) use a self-signed certificate
+        // in their PostgreSQL TLS chain. rejectUnauthorized must be false to
+        // allow the connection. This is intentional and acceptable because the
+        // traffic is still encrypted — only certificate chain verification is
+        // skipped. If your provider supplies a trusted CA cert, set
+        // DATABASE_SSL_REJECT_UNAUTHORIZED=true and provide DATABASE_CA_CERT.
         ssl: env('NODE_ENV') === 'production'
-          ? { rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', true) }
+          ? { rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', false) }
           : false,
       }
     : {
