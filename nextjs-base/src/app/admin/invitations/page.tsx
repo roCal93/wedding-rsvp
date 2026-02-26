@@ -72,10 +72,25 @@ export default async function AdminInvitationsPage() {
 
   const guests = await getAllGuests()
 
-  const total = guests.length
-  const attending = guests.filter((g) => g.rsvpStatus === 'attending').length
-  const declining = guests.filter((g) => g.rsvpStatus === 'declining').length
-  const pending = guests.filter((g) => g.rsvpStatus === 'pending').length
+  // Count real people: 2 if partner is confirmed attending, or if name2 exists
+  // and partner attendance is not asked separately (both come as a pair).
+  function countPeople(guest: Guest): number {
+    if (guest.askPartnerAttendance) {
+      return guest.partnerAttending === true ? 2 : 1
+    }
+    return guest.name2 ? 2 : 1
+  }
+
+  const total = guests.reduce((sum, g) => sum + countPeople(g), 0)
+  const attending = guests
+    .filter((g) => g.rsvpStatus === 'attending')
+    .reduce((sum, g) => sum + countPeople(g), 0)
+  const declining = guests
+    .filter((g) => g.rsvpStatus === 'declining')
+    .reduce((sum, g) => sum + countPeople(g), 0)
+  const pending = guests
+    .filter((g) => g.rsvpStatus === 'pending')
+    .reduce((sum, g) => sum + countPeople(g), 0)
 
   const statusLabel: Record<Guest['rsvpStatus'], string> = {
     pending: '⏳ En attente',

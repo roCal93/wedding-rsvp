@@ -372,7 +372,9 @@ function ConfirmationView({
   partnerAttending: boolean | null
 }) {
   const { name1, name2, gender } = guest
-  const withPartner = partnerAttending === true && !!name2
+  // withPartner is true when name2 exists and the partner hasn't explicitly declined
+  // (covers both "attending with partner" and "two names, partner not asked")
+  const withPartner = !!name2 && partnerAttending !== false
   const tutoie = gender === 'male' || gender === 'female'
 
   if (status === 'attending') {
