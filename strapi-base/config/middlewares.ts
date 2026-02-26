@@ -74,7 +74,8 @@ export default [
       // Allow a set of known origins in production, plus Vercel previews via regex.
       origin: (ctx: any) => {
         const requestOrigin = ctx.request.header.origin;
-        if (!requestOrigin) return '*';
+        // Never allow wildcard — requests without Origin header are denied
+        if (!requestOrigin) return false;
 
         const allowed = process.env.ALLOWED_ORIGINS?.split(',') || [
           'https://yourdomain.com',

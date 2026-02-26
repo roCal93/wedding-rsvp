@@ -18,8 +18,11 @@ export default ({ env }) => {
     ? {
         // Railway fournit DATABASE_URL avec SSL activé
         connectionString: env('DATABASE_URL'),
+        // rejectUnauthorized defaults to true for secure certificate validation.
+        // Set DATABASE_SSL_REJECT_UNAUTHORIZED=false only if your provider uses
+        // a self-signed cert that cannot be verified (not recommended).
         ssl: env('NODE_ENV') === 'production'
-          ? { rejectUnauthorized: false } // SSL requis en production
+          ? { rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', true) }
           : false,
       }
     : {

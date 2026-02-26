@@ -1,6 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
+// ─── Rate limiting ────────────────────────────────────────────────────────────
+const rsvpRateLimitMap = new Map<string, { count: number; resetTime: number }>()
+const RSVP_RATE_LIMIT = 10 // max soumissions par IP
+const RSVP_RATE_WINDOW = 15 * 60 * 1000 // 15 minutes
+
+setInterval(() => {
+  const now = Date.now()
+  for (const [ip, data] of rsvpRateLimitMap.entries()) {
+    if (now > data.resetTime) rsvpRateLimitMap.delete(ip)
+  }
+}, 60 * 1000)
+
+// ─── HTML escape (protège l'email de notification contre l'injection HTML) ───
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+    '/': '&#x2F;',
+  }
+  return text.replace(/[&<>"'/]/g, (c) => map[c] || c)
+}
+
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
@@ -16,6 +41,29 @@ export async function PUT(
 
   if (!token) {
     return NextResponse.json({ error: 'Token manquant' }, { status: 400 })
+  }
+
+  // Rate limiting par IP
+  const ip =
+    request.headers.get('x-forwarded-for') ??
+    request.headers.get('x-real-ip') ??
+    'unknown'
+  const now = Date.now()
+  const rl = rsvpRateLimitMap.get(ip)
+  if (rl) {
+    if (now < rl.resetTime) {
+      if (rl.count >= RSVP_RATE_LIMIT) {
+        return NextResponse.json(
+          { error: 'Trop de tentatives. Réessayez dans quelques minutes.' },
+          { status: 429 }
+        )
+      }
+      rl.count++
+    } else {
+      rsvpRateLimitMap.set(ip, { count: 1, resetTime: now + RSVP_RATE_WINDOW })
+    }
+  } else {
+    rsvpRateLimitMap.set(ip, { count: 1, resetTime: now + RSVP_RATE_WINDOW })
   }
 
   let body: {
@@ -117,7 +165,7 @@ export async function PUT(
                   ? `
               <tr style="background: #f9f9f9;">
                 <td style="padding: 8px; font-weight: bold; color: #555;">Message</td>
-                <td style="padding: 8px; font-style: italic;">"${body.message}"</td>
+                <td style="padding: 8px; font-style: italic;">"${escapeHtml(body.message ?? '')}"</td>
               </tr>`
                   : ''
               }
@@ -133,7 +181,7 @@ export async function PUT(
             process.env.RESEND_FROM_EMAIL ||
             'RSVP <rsvp@notifications.wedding-rsvp.fr>',
           to: organizerEmail,
-          subject: `RSVP — ${guestDisplayName} : ${body.status === 'attending' ? 'Présent(e) 🎉' : 'Absent(e)'}`,
+          subject: `Mariage — ${guestDisplayName} : ${body.status === 'attending' ? 'Présent(e) 🎉' : 'Absent(e)'}`,
           html: emailHtml,
         })
       }

@@ -1,11 +1,17 @@
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import CopyUrlInput from './CopyUrlInput'
 
 // Force dynamic rendering – never statically pre-render this admin page.
 export const dynamic = 'force-dynamic'
 
+// Guard: ADMIN_SECRET must be explicitly defined — no hardcoded fallback allowed
+if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === 'production') {
+  throw new Error('ADMIN_SECRET must be set in production')
+}
+
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || ''
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'admin-secret-change-me'
 const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 ).replace(/\/$/, '')
@@ -30,6 +36,14 @@ type StrapiListResponse = {
   meta: { pagination: { total: number } }
 }
 
+async function checkAdminCookie(): Promise<boolean> {
+  const ADMIN_SECRET = process.env.ADMIN_SECRET
+  if (!ADMIN_SECRET) return false
+  const cookieStore = await cookies()
+  const adminAuth = cookieStore.get('admin_auth')?.value
+  return adminAuth === ADMIN_SECRET
+}
+
 async function getAllGuests(): Promise<Guest[]> {
   try {
     const res = await fetch(
@@ -49,31 +63,11 @@ async function getAllGuests(): Promise<Guest[]> {
   }
 }
 
-function checkAdminAuth(secret: string | null): boolean {
-  return secret === ADMIN_SECRET
-}
+export default async function AdminInvitationsPage() {
+  const isAuthorized = await checkAdminCookie()
 
-export default async function AdminInvitationsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ secret?: string }>
-}) {
-  const { secret } = await searchParams
-
-  // Show a plain 403 page when unauthorized rather than redirecting (prevents
-  // infinite redirect loop and avoids leaking the secret in the URL)
-  if (!checkAdminAuth(secret || null)) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-stone-50">
-        <div className="text-center">
-          <p className="text-6xl font-serif text-stone-300 mb-4">403</p>
-          <p className="text-stone-500">Accès non autorisé</p>
-          <p className="text-stone-400 text-sm mt-2">
-            Ajoutez <code>?secret=VOTRE_SECRET</code> à l&apos;URL.
-          </p>
-        </div>
-      </main>
-    )
+  if (!isAuthorized) {
+    redirect('/admin/login')
   }
 
   const guests = await getAllGuests()
@@ -98,9 +92,19 @@ export default async function AdminInvitationsPage({
   return (
     <main className="min-h-screen bg-stone-50 px-4 py-12">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-serif font-light text-stone-900 mb-1">
-          Liste des invités
-        </h1>
+        <div className="flex items-center justify-between mb-1">
+          <h1 className="text-2xl font-serif font-light text-stone-900">
+            Liste des invités
+          </h1>
+          <form action="/api/admin/logout" method="POST">
+            <button
+              type="submit"
+              className="text-xs text-stone-400 hover:text-stone-600 transition-colors"
+            >
+              Déconnexion
+            </button>
+          </form>
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">

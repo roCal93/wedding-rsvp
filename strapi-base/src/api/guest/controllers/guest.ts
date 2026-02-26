@@ -49,6 +49,12 @@ export default factories.createCoreController(UID as AnyStrapi, ({ strapi }: { s
       return ctx.badRequest('Token invalide');
     }
 
+    // Validate UUID v4 format — prevents malformed input from reaching the DB
+    const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!UUID_V4_REGEX.test(token)) {
+      return ctx.badRequest('Token invalide');
+    }
+
     const guests = await strapi.entityService.findMany('api::guest.guest', {
       filters: { token },
       populate: { wedding: true },
@@ -101,6 +107,12 @@ export default factories.createCoreController(UID as AnyStrapi, ({ strapi }: { s
     const body = ctx.request.body;
 
     if (!token || typeof token !== 'string') {
+      return ctx.badRequest('Token invalide');
+    }
+
+    // Validate UUID v4 format — prevents malformed input from reaching the DB
+    const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!UUID_V4_REGEX.test(token)) {
       return ctx.badRequest('Token invalide');
     }
 
