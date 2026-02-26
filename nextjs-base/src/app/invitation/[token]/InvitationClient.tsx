@@ -394,7 +394,10 @@ function ConfirmationView({
     }
 
     const defaultSoloTitle = `À très bientôt, ${name1} !`
-    const defaultSoloBody = tutoie
+    // Use "tu" form when gender is known OR when the partner explicitly won't come
+    // (we know exactly one person is attending in both cases)
+    const useTutoie = tutoie || partnerAttending === false
+    const defaultSoloBody = useTutoie
       ? `Ta présence a bien été confirmée. Les mariés ont hâte de te voir !`
       : `Votre présence a bien été confirmée. Les mariés ont hâte de vous voir !`
     return (
