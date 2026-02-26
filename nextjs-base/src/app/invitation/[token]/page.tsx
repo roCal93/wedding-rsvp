@@ -25,8 +25,6 @@ export type GuestData = {
   wedding: {
     eventName: string
     date: string
-    venue: string
-    venueAddress: string | null
     coverMessage: string | null
   } | null
 }

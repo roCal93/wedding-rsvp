@@ -85,8 +85,6 @@ export default factories.createCoreController(UID as AnyStrapi, ({ strapi }: { s
           ? {
               eventName: guest.wedding.eventName,
               date: guest.wedding.date,
-              venue: guest.wedding.venue,
-              venueAddress: guest.wedding.venueAddress,
               coverMessage: guest.wedding.coverMessage,
             }
           : null,

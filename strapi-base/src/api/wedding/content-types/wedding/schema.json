@@ -15,18 +15,7 @@
       "required": true
     },
     "date": {
-      "type": "datetime",
-      "required": true
-    },
-    "venue": {
-      "type": "string",
-      "required": true
-    },
-    "venueAddress": {
-      "type": "text"
-    },
-    "organizerEmail": {
-      "type": "email",
+      "type": "date",
       "required": true
     },
     "coverMessage": {

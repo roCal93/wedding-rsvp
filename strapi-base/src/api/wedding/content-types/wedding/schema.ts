@@ -11,10 +11,7 @@ export default {
   },
   "attributes": {
     "eventName": { "type": "string", "required": true },
-    "date": { "type": "datetime", "required": true },
-    "venue": { "type": "string", "required": true },
-    "venueAddress": { "type": "text" },
-    "organizerEmail": { "type": "email", "required": true },
+    "date": { "type": "date", "required": true },
     "coverMessage": { "type": "text" },
     "guests": {
       "type": "relation",

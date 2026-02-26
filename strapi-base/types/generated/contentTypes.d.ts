@@ -831,7 +831,7 @@ export interface ApiWeddingWedding extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
     eventName: Schema.Attribute.String & Schema.Attribute.Required;
     guests: Schema.Attribute.Relation<'oneToMany', 'api::guest.guest'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -840,13 +840,10 @@ export interface ApiWeddingWedding extends Struct.CollectionTypeSchema {
       'api::wedding.wedding'
     > &
       Schema.Attribute.Private;
-    organizerEmail: Schema.Attribute.Email & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    venue: Schema.Attribute.String & Schema.Attribute.Required;
-    venueAddress: Schema.Attribute.Text;
   };
 }
 

@@ -79,8 +79,7 @@ export async function PUT(
       const { data: guest } = await guestRes.json()
       const wedding = guest?.wedding
 
-      const organizerEmail =
-        wedding?.organizerEmail || process.env.WEDDING_ORGANIZER_EMAIL
+      const organizerEmail = process.env.WEDDING_ORGANIZER_EMAIL
 
       if (organizerEmail) {
         const guestDisplayName = guest.name2
