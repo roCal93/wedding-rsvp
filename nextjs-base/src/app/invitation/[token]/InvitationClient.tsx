@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import type { GuestData } from './page'
 
@@ -354,6 +355,13 @@ export default function InvitationClient({
               >
                 {loading ? 'Envoi en cours...' : 'Confirmer ma réponse'}
               </button>
+
+              <Link
+                href={`/invitation/${token}/logement`}
+                className="inline-block bg-[#D9EDCB]/40 text-stone-600 ml-16 px-6 py-2 rounded-xl text-lg font-medium hover:bg-[#D9EDCB]/60 transition-colors text-center"
+              >
+                Info logement
+              </Link>
             </form>
           )}
         </div>
