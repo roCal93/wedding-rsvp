@@ -48,6 +48,8 @@ export default function InvitationClient({
 
   // True when the organizer wants to ask if name2 will attend
   const hasPartnerChoice = guest.askPartnerAttendance && !!guest.name2
+  // Two guests are invited together and must answer as a pair.
+  const isDuoWithoutPartnerChoice = !!guest.name2 && !guest.askPartnerAttendance
 
   function choose(
     newStatus: 'attending' | 'declining',
@@ -238,9 +240,11 @@ export default function InvitationClient({
                 <legend className="text-lg text-center font-medium text-stone-700 mb-3">
                   {hasPartnerChoice
                     ? 'Serez-vous présents ?'
-                    : gender
-                      ? `Seras-tu ${g(gender, 'présent', 'présente')} ?`
-                      : `Serez-vous ${g(gender, 'présent', 'présente')} ?`}{' '}
+                    : isDuoWithoutPartnerChoice
+                      ? 'Serez-vous présents ?'
+                      : gender
+                        ? `Seras-tu ${g(gender, 'présent', 'présente')} ?`
+                        : `Serez-vous ${g(gender, 'présent', 'présente')} ?`}{' '}
                 </legend>
 
                 {hasPartnerChoice ? (
@@ -268,7 +272,7 @@ export default function InvitationClient({
                           : 'bg-[#D9EDCB]/40 text-stone-600 hover:bg-[#D9EDCB]/60'
                       }`}
                     >
-                      Je viendrai {g(gender, 'seul', 'seule')}
+                      Je viendrai {g(gender, 'seul', 'seule')}.
                     </button>
 
                     <button
@@ -307,7 +311,9 @@ export default function InvitationClient({
                           : 'bg-[#D9EDCB]/40 text-stone-600 hover:bg-[#D9EDCB]/60'
                       }`}
                     >
-                      Je ne pourrai pas venir.
+                      {isDuoWithoutPartnerChoice
+                        ? 'Nous ne pourrons pas venir.'
+                        : 'Je ne pourrai pas venir.'}
                     </button>
                   </div>
                 )}
@@ -381,6 +387,7 @@ function ConfirmationView({
   // (covers both "attending with partner" and "two names, partner not asked")
   const withPartner = !!name2 && partnerAttending !== false
   const tutoie = gender === 'male' || gender === 'female'
+  const isDuoWithoutPartnerChoice = !!name2 && !guest.askPartnerAttendance
 
   if (status === 'attending') {
     if (withPartner) {
@@ -417,12 +424,16 @@ function ConfirmationView({
     )
   }
 
-  const defaultDecliningTitle = tutoie
-    ? `Message bien reçu, ${name1}.`
-    : `Message bien reçu !`
-  const defaultDecliningBody = tutoie
-    ? `Tu seras dans les pensées des mariés en ce jour.`
-    : `Vous serez dans les pensées des mariés en ce jour.`
+  const defaultDecliningTitle = isDuoWithoutPartnerChoice
+    ? `Message bien reçu !`
+    : tutoie
+      ? `Message bien reçu, ${name1}.`
+      : `Message bien reçu !`
+  const defaultDecliningBody = isDuoWithoutPartnerChoice
+    ? `Vous serez dans les pensées des mariés en ce jour.`
+    : tutoie
+      ? `Tu seras dans les pensées des mariés en ce jour.`
+      : `Vous serez dans les pensées des mariés en ce jour.`
 
   return (
     <div className="text-center p-6 rounded-xl bg-[#D9EDCB]/50">
