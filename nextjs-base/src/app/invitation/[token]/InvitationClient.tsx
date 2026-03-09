@@ -358,7 +358,7 @@ export default function InvitationClient({
 
               <Link
                 href={`/invitation/${token}/logement`}
-                className="inline-block bg-[#D9EDCB]/40 text-stone-600 ml-16 px-6 py-2 rounded-xl text-lg font-medium hover:bg-[#D9EDCB]/60 transition-colors text-center"
+                className="inline-block bg-[#D9EDCB] text-stone-600 ml-16 px-6 py-2 rounded-xl text-lg font-medium text-center"
               >
                 Info logement
               </Link>
