@@ -241,7 +241,6 @@ export default function InvitationClient({
                     : gender
                       ? `Seras-tu ${g(gender, 'présent', 'présente')} ?`
                       : `Serez-vous ${g(gender, 'présent', 'présente')} ?`}{' '}
-                  <span className="text-red-400">*</span>
                 </legend>
 
                 {hasPartnerChoice ? (
@@ -281,7 +280,7 @@ export default function InvitationClient({
                           : 'bg-[#D9EDCB]/40 text-stone-600 hover:bg-[#D9EDCB]/60'
                       }`}
                     >
-                      Je ne pourrai pas venir
+                      Je ne pourrai pas venir.
                     </button>
                   </div>
                 ) : (
@@ -308,7 +307,7 @@ export default function InvitationClient({
                           : 'bg-[#D9EDCB]/40 text-stone-600 hover:bg-[#D9EDCB]/60'
                       }`}
                     >
-                      Je ne pourrai pas venir
+                      Je ne pourrai pas venir.
                     </button>
                   </div>
                 )}
@@ -321,9 +320,7 @@ export default function InvitationClient({
                     htmlFor="message"
                     className="text-lg text-center font-medium text-stone-700 block mb-2"
                   >
-                    {status === 'attending'
-                      ? 'Un mot pour les mariés ? (facultatif)'
-                      : 'Un message ? (facultatif)'}
+                    Un message ?
                   </label>
                   <textarea
                     id="message"
@@ -331,7 +328,7 @@ export default function InvitationClient({
                     maxLength={1000}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Votre message..."
+                    placeholder="On aime les messages..."
                     className="w-full border border-[#D9EDCB]/60 rounded-xl px-4 py-2.5 text-lg text-stone-800 resize-none focus:outline-none focus:ring-2 focus:ring-[#D9EDCB]/60"
                   />
                 </div>
