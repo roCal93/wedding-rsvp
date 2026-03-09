@@ -145,7 +145,7 @@ export default async function LodgingPage({
 
           <Link
             href={`/invitation/${token}`}
-            className="block w-full bg-[#F9E1D1] text-stone-600 py-2 rounded-xl text-lg font-medium hover:bg-[#F9E1D1]/80 transition-colors text-center"
+            className="block w-full bg-[#F9E1D1]/70 text-stone-600 py-2 rounded-xl text-lg font-medium hover:bg-[#F9E1D1]/80 transition-colors text-center"
           >
             Retour à l&apos;invitation
           </Link>
