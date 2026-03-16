@@ -260,7 +260,7 @@ export default function InvitationClient({
                       }`}
                     >
                       Je serai {g(gender, 'présent', 'présente')} avec{' '}
-                      {guest.name2}
+                      {guest.name2}.
                     </button>
 
                     <button
