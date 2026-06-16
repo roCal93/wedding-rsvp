@@ -1,0 +1,32 @@
+{
+  "lockfileVersion": 1,
+  "starterVersion": "2.0.0",
+  "blockLibraryVersion": "1.0.0",
+  "blocks": {
+    "TextBlock": {
+      "version": "1.4.0",
+      "installedAt": "2026-05-19T12:19:49Z",
+      "checksum": {
+        "nextjs": "unknown",
+        "strapi": "unknown"
+      }
+    },
+    "ImageBlock": {
+      "version": "1.2.0",
+      "installedAt": "2026-05-19T12:19:49Z",
+      "checksum": {
+        "nextjs": "unknown",
+        "strapi": "unknown"
+      }
+    },
+    "ButtonBlock": {
+      "version": "1.1.0",
+      "installedAt": "2026-05-19T12:19:49Z",
+      "checksum": {
+        "nextjs": "unknown",
+        "strapi": "unknown"
+      }
+    }
+  },
+  "lastUpdate": "2026-05-19T12:19:49Z"
+}
