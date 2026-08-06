@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { DEFAULT_STRAPI_URL } from '@/lib/constants'
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
 const rsvpRateLimitMap = new Map<string, { count: number; resetTime: number }>()
@@ -30,7 +31,7 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || DEFAULT_STRAPI_URL
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || ''
 
 export async function PUT(

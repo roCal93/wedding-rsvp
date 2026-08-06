@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import CopyUrlInput from './CopyUrlInput'
+import { DEFAULT_STRAPI_URL } from '@/lib/constants'
 
 // Force dynamic rendering – never statically pre-render this admin page.
 export const dynamic = 'force-dynamic'
@@ -10,7 +11,7 @@ if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === 'production') {
   throw new Error('ADMIN_SECRET must be set in production')
 }
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || DEFAULT_STRAPI_URL
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || ''
 const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'

@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
 import InvitationClient from './InvitationClient'
+import { DEFAULT_STRAPI_URL } from '@/lib/constants'
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || DEFAULT_STRAPI_URL
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || ''
 
 export type GuestData = {
