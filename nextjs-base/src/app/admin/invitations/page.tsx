@@ -6,11 +6,6 @@ import { DEFAULT_STRAPI_URL } from '@/lib/constants'
 // Force dynamic rendering – never statically pre-render this admin page.
 export const dynamic = 'force-dynamic'
 
-// Guard: ADMIN_SECRET must be explicitly defined — no hardcoded fallback allowed
-if (!process.env.ADMIN_SECRET && process.env.NODE_ENV === 'production') {
-  throw new Error('ADMIN_SECRET must be set in production')
-}
-
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || DEFAULT_STRAPI_URL
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN || ''
 const SITE_URL = (
@@ -39,7 +34,13 @@ type StrapiListResponse = {
 
 async function checkAdminCookie(): Promise<boolean> {
   const ADMIN_SECRET = process.env.ADMIN_SECRET
-  if (!ADMIN_SECRET) return false
+  // Guard: ADMIN_SECRET must be explicitly defined — no hardcoded fallback allowed
+  if (!ADMIN_SECRET) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('ADMIN_SECRET must be set in production')
+    }
+    return false
+  }
   const cookieStore = await cookies()
   const adminAuth = cookieStore.get('admin_auth')?.value
   return adminAuth === ADMIN_SECRET
